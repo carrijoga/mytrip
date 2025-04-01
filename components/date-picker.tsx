@@ -17,6 +17,8 @@ interface DatePickerProps {
 
 export function DatePicker({ onDateChange }: DatePickerProps) {
   const [date, setDate] = useState<Date | undefined>(new Date("2025-05-23"))
+  const [open, setOpen] = useState(false)
+  const [month, setMonth] = useState<Date>(new Date("2025-05-23"))
 
   // Load date from localStorage on component mount
   useEffect(() => {
@@ -25,7 +27,9 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
       const parsedDate = new Date(savedDate)
       if (!isNaN(parsedDate.getTime())) {
         setDate(parsedDate)
+        setMonth(parsedDate)
         onDateChange(parsedDate)
+        setOpen(false)
       }
     }
   }, [onDateChange])
@@ -33,6 +37,7 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
       setDate(newDate)
+      setMonth(newDate)
       localStorage.setItem("targetDate", newDate.toISOString())
       onDateChange(newDate)
 
@@ -46,10 +51,9 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
             className={cn(
               "w-full justify-between text-left font-normal bg-gray-800 border-gray-700 hover:bg-gray-700 hover:text-white",
               !date && "text-muted-foreground",
@@ -69,7 +73,9 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
             mode="single"
             selected={date}
             onSelect={handleDateSelect}
-            initialFocus
+            month={month}
+            onMonthChange={setMonth}
+            autoFocus
             className="bg-gray-800 text-white"
           />
         </PopoverContent>
@@ -77,4 +83,3 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
     </motion.div>
   )
 }
-

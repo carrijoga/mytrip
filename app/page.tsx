@@ -29,7 +29,7 @@ export default function Home() {
             </span>
             Tempo Restante para Viajar
           </h1>
-          <p className="text-gray-400 mb-6">Selecione uma data para sua viagem</p>
+          <p className="text-gray-400 mb-1">Selecione uma data para sua viagem</p>
           <div className="max-w-xs mx-auto">
             <DatePicker onDateChange={handleDateChange} />
           </div>
