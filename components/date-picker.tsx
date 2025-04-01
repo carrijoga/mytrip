@@ -8,17 +8,17 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { toast } from "@/components/ui/use-toast"
-import { ToastAction } from "@/components/ui/toast"
+import { toast } from "sonner"
+import Confetti from 'react-confetti-boom';
 
 interface DatePickerProps {
   onDateChange: (date: Date) => void
 }
 
 export function DatePicker({ onDateChange }: DatePickerProps) {
-  const [date, setDate] = useState<Date | undefined>(new Date("2025-05-23"))
+  const [date, setDate] = useState<Date | undefined>(new Date())
   const [open, setOpen] = useState(false)
-  const [month, setMonth] = useState<Date>(new Date("2025-05-23"))
+  const [month, setMonth] = useState<Date>(new Date())
 
   // Load date from localStorage on component mount
   useEffect(() => {
@@ -32,7 +32,7 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
         setOpen(false)
       }
     }
-  }, [onDateChange])
+  }, [])
 
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
@@ -40,11 +40,12 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
       setMonth(newDate)
       localStorage.setItem("targetDate", newDate.toISOString())
       onDateChange(newDate)
+      setOpen(false)
 
-      toast({
-        title: "Data salva! ✅",
+      toast.success("Data salva! ✅", {
         description: `Contagem regressiva atualizada para ${format(newDate, "dd/MM/yyyy")}`,
-        action: <ToastAction altText="Ok">Ok</ToastAction>,
+        duration: 3000,
+        position: "bottom-center"
       })
     }
   }
@@ -54,8 +55,9 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            variant="outline"
             className={cn(
-              "w-full justify-between text-left font-normal bg-gray-800 border-gray-700 hover:bg-gray-700 hover:text-white",
+              "w-full justify-between text-left font-normal border-input hover:bg-accent hover:text-accent-foreground",
               !date && "text-muted-foreground",
             )}
           >
@@ -68,15 +70,14 @@ export function DatePicker({ onDateChange }: DatePickerProps) {
             <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-gray-800 border-gray-700">
+        <PopoverContent className="w-auto p-0">
           <Calendar
             mode="single"
             selected={date}
             onSelect={handleDateSelect}
             month={month}
             onMonthChange={setMonth}
-            autoFocus
-            className="bg-gray-800 text-white"
+            initialFocus
           />
         </PopoverContent>
       </Popover>

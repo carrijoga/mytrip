@@ -1,6 +1,6 @@
 "use client"
 
-import { useTheme, themes } from "@/lib/theme-context"
+import { useTheme as useNextTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Check, Palette } from "lucide-react"
 import {
@@ -13,42 +13,38 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export function ThemeSelector() {
-  const { currentTheme, setTheme } = useTheme()
+const themes = [
+  { name: "Light", value: "light" },
+  { name: "Dark", value: "dark" },
+  { name: "System", value: "system" },
+]
 
-  const handleThemeChange = (value: string) => {
-    const selectedTheme = themes.find((theme) => theme.name === value)
-    if (selectedTheme) {
-      setTheme(selectedTheme)
-    }
-  }
+export function ColorThemeSelector() {
+  const { theme, setTheme } = useNextTheme()
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          size="sm"
-          className={`gap-2 ${currentTheme.cardBg} ${currentTheme.borderColor} hover:bg-gray-700`}
+          size="icon"
+          className="shadow-custom"
         >
-          <Palette className="h-4 w-4 text-white" />
-          <span className="text-white">Theme</span>
+          <Palette className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className={`w-56 ${currentTheme.cardBg} ${currentTheme.borderColor}`}>
-        <DropdownMenuLabel className="text-gray-300">Color Themes</DropdownMenuLabel>
-        <DropdownMenuSeparator className="bg-gray-700" />
-        <DropdownMenuRadioGroup value={currentTheme.name} onValueChange={handleThemeChange}>
-          {themes.map((theme) => (
+      <DropdownMenuContent className="w-56 shadow-custom-lg">
+        <DropdownMenuLabel>Theme</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+          {themes.map((themeOption) => (
             <DropdownMenuRadioItem
-              key={theme.name}
-              value={theme.name}
-              className="text-gray-300 focus:bg-gray-700 focus:text-white cursor-pointer"
+              key={themeOption.value}
+              value={themeOption.value}
             >
               <div className="flex items-center gap-2">
-                <div className={`w-4 h-4 rounded-full ${theme.numberColor.replace("text-", "bg-")}`} />
-                <span>{theme.name}</span>
-                {currentTheme.name === theme.name && <Check className="h-4 w-4 ml-auto" />}
+                <span>{themeOption.name}</span>
+                {theme === themeOption.value && <Check className="h-4 w-4 ml-auto" />}
               </div>
             </DropdownMenuRadioItem>
           ))}

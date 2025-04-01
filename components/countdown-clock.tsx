@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { motion } from "framer-motion"
 import NumberFlow, { Format } from '@number-flow/react'
+import Confetti from 'react-confetti-boom'
+import { useLanguage } from "@/lib/language-context"
 
 interface TimeLeft {
   years: number
@@ -27,6 +29,8 @@ export default function CountdownClock({ targetDate }: CountdownClockProps) {
     minutes: 0,
     seconds: 0,
   })
+  const [showConfetti, setShowConfetti] = useState(false)
+  const { language } = useLanguage()
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -34,6 +38,7 @@ export default function CountdownClock({ targetDate }: CountdownClockProps) {
       const now = new Date()
 
       if (now >= target) {
+        setShowConfetti(true)
         return {
           years: 0,
           months: 0,
@@ -44,6 +49,7 @@ export default function CountdownClock({ targetDate }: CountdownClockProps) {
         }
       }
 
+      setShowConfetti(false)
       let delta = Math.floor((target.getTime() - now.getTime()) / 1000)
 
       const secondsInYear = 365 * 24 * 60 * 60
@@ -93,36 +99,42 @@ export default function CountdownClock({ targetDate }: CountdownClockProps) {
 
   const timeItems = [
     { 
-      label: formatLabel(timeLeft.years, "Ano", "Anos"), 
+      label: formatLabel(timeLeft.years, language === "pt" ? "Ano" : "Year", language === "pt" ? "Anos" : "Years"), 
       value: timeLeft.years, 
-      emoji: "" 
+      emoji: "",
+      showIfZero: false
     },
     { 
-      label: formatLabel(timeLeft.months, "Mês", "Meses"), 
+      label: formatLabel(timeLeft.months, language === "pt" ? "Mês" : "Month", language === "pt" ? "Meses" : "Months"), 
       value: timeLeft.months, 
-      emoji: "" 
+      emoji: "",
+      showIfZero: timeLeft.years > 0
     },
     { 
-      label: formatLabel(timeLeft.days, "Dia", "Dias"), 
+      label: formatLabel(timeLeft.days, language === "pt" ? "Dia" : "Day", language === "pt" ? "Dias" : "Days"), 
       value: timeLeft.days, 
-      emoji: "" 
+      emoji: "",
+      showIfZero: timeLeft.years > 0 || timeLeft.months > 0
     },
     { 
-      label: formatLabel(timeLeft.hours, "Hora", "Horas"), 
+      label: formatLabel(timeLeft.hours, language === "pt" ? "Hora" : "Hour", language === "pt" ? "Horas" : "Hours"), 
       value: timeLeft.hours, 
-      emoji: "" 
+      emoji: "",
+      showIfZero: timeLeft.years > 0 || timeLeft.months > 0 || timeLeft.days > 0
     },
     { 
-      label: formatLabel(timeLeft.minutes, "Minuto", "Minutos"), 
+      label: formatLabel(timeLeft.minutes, language === "pt" ? "Minuto" : "Minute", language === "pt" ? "Minutos" : "Minutes"), 
       value: timeLeft.minutes, 
-      emoji: "" 
+      emoji: "",
+      showIfZero: timeLeft.years > 0 || timeLeft.months > 0 || timeLeft.days > 0 || timeLeft.hours > 0
     },
     { 
-      label: formatLabel(timeLeft.seconds, "Segundo", "Segundos"), 
+      label: formatLabel(timeLeft.seconds, language === "pt" ? "Segundo" : "Second", language === "pt" ? "Segundos" : "Seconds"), 
       value: timeLeft.seconds, 
-      emoji: "" 
+      emoji: "",
+      showIfZero: true
     },
-  ].filter(item => item.value > 0)
+  ].filter(item => item.value > 0 || item.showIfZero)
 
   const gridCols = {
     1: "grid-cols-1",
@@ -135,12 +147,17 @@ export default function CountdownClock({ targetDate }: CountdownClockProps) {
 
   return (
     <motion.div
-      className="flex flex-col items-center"
+      className="flex flex-col items-center relative overflow-visible w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <Card className="w-full max-w-4xl shadow-lg bg-gray-800 border-gray-700 overflow-hidden">
+      {showConfetti && (
+        <div className="fixed inset-1 pointer-events-none">
+          <Confetti mode="boom" particleCount={200} />
+        </div>
+      )}
+      <Card className="w-full max-w-4xl shadow-custom-lg relative backdrop-blur-sm bg-background/80">
         <CardContent className="p-4 md:p-6">
           <div className={`grid ${gridCols[timeItems.length as keyof typeof gridCols]} gap-4 text-center`}>
             {timeItems.map((item, index) => (
@@ -158,13 +175,13 @@ export default function CountdownClock({ targetDate }: CountdownClockProps) {
                 >
                   {item.emoji}
                 </motion.div>
-                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-cyan-400 mb-2 tabular-nums min-w-[60px] sm:min-w-[80px]">
+                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-2 tabular-nums min-w-[60px] sm:min-w-[80px] drop-shadow-custom">
                   <NumberFlow
                     value={item.value}
                     format={((value: number) => value.toString().padStart(2, "0")) as Format}
                   />
                 </div>
-                <div className="text-xs sm:text-sm text-gray-400 whitespace-nowrap">{item.label}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap drop-shadow-custom-sm">{item.label}</div>
               </motion.div>
             ))}
           </div>
