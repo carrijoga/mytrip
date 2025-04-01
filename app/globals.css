@@ -74,6 +74,8 @@
       hsl(var(--gradient-middle)) 50%,
       hsl(var(--gradient-end)) 100%
     );
+    background-size: 200% 200%;
+    animation: gradientAnimarion 15s ease infinite;
   }
 }
 
@@ -92,3 +94,20 @@
   }
 }
 
+@keyframes gradientAnimarion {
+  0% {
+    background-position: 0% 30%;
+  }
+  25% {
+    background-position: 50% 30%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 70%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
