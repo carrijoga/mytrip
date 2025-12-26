@@ -69,36 +69,6 @@ yarn dev
 4. **Customize Theme**: Click the palette icon to choose your preferred color theme
 5. **Celebrate**: When the countdown reaches zero, enjoy the confetti celebration! 🎉
 
-## 🛠️ Development
-
-### Available Scripts
-
-- `npm run dev` - Start the development server
-- `npm run build` - Build the application for production
-- `npm run start` - Start the production server
-- `npm run lint` - Run ESLint to check code quality
-
-### Project Structure
-
-```
-mytrip/
-├── app/                    # Next.js app directory
-│   ├── layout.tsx         # Root layout with providers
-│   ├── page.tsx           # Home page
-│   └── globals.css        # Global styles
-├── components/            # React components
-│   ├── countdown-clock.tsx    # Countdown timer component
-│   ├── date-picker.tsx        # Date selection component
-│   ├── theme-provider.tsx     # Theme context provider
-│   ├── theme-selector.tsx     # Theme selection component
-│   └── ui/                    # Shadcn UI components
-├── lib/                   # Utility functions
-│   ├── language-context.tsx   # Language context provider
-│   └── utils.ts              # Helper functions
-├── public/                # Static assets
-└── styles/                # Additional styles
-```
-
 ## 🎨 Customization
 
 ### Adding New Themes
@@ -109,29 +79,9 @@ Themes can be customized by modifying the theme selector component. The applicat
 
 The application supports Portuguese and English out of the box. To add more languages, extend the language context in `lib/language-context.tsx`.
 
-## 🌐 Deployment
-
-The easiest way to deploy your MyTrip application is to use [Vercel](https://vercel.com):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/carrijoga/mytrip)
-
-Alternatively, you can deploy to any platform that supports Next.js applications.
-
-## 📄 License
-
-This project is private and intended for personal use.
+---
 
 ## 👨‍💻 Author
 
 Developed with ❤️ by [carrijoga](https://github.com/carrijoga)
-
-## 🙏 Acknowledgments
-
-- Built with [Next.js](https://nextjs.org/)
-- UI components from [Radix UI](https://www.radix-ui.com/)
-- Styled with [Tailwind CSS](https://tailwindcss.com/)
-- Animations powered by [Framer Motion](https://www.framer.com/motion/)
-
----
-
 **Ready to count down to your next adventure? Start planning your trip today!** ✈️🌍
