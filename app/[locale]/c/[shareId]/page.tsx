@@ -8,6 +8,8 @@ import { CreateCopyButton } from "@/components/create-copy-button"
 import type { CountdownEntry } from "@/lib/types"
 import { getTranslations } from "next-intl/server"
 
+const SITE_URL = "https://momentto.carrijoga.com.br"
+
 interface Props {
   params: Promise<{ shareId: string; locale: string }>
 }
@@ -56,13 +58,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${title} | Momentto`,
       description,
-      images: [{ url: `/${locale}/c/${shareId}/opengraph-image` }],
+      images: [{ url: `${SITE_URL}/${locale}/c/${shareId}/opengraph-image`, width: 1200, height: 630, alt: `${title} | Momentto` }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} | Momentto`,
       description,
-      images: [`/${locale}/c/${shareId}/opengraph-image`],
+      images: [`${SITE_URL}/${locale}/c/${shareId}/opengraph-image`],
     },
   }
 }
